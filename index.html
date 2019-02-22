@@ -20,15 +20,13 @@
 
       <div class="product-info">
 
-        <h1>{{ title }}<strong v-if="onSale">: 50% OFF!</strong></h1>
+        <h1>{{ title }}</h1>
+
+        <!-- <h2 :class="{ noSale: !onSale }" >{{ onSaleInfo }} END OF YEAR SALE!!!</h2> -->
 
         <p v-if="inStock">In Stock</p>
-        <p
-          v-else
-          :class="{ outOfStock: !inStock }"
-        >
-        Out of Stock
-        </p>
+        <p v-else >Out of Stock</p>
+        <p>{{ sale }}</p>
         <!-- <p v-if="inventory > 10">In Stock</p> -->
         <!-- <p v-else-if="inventory <= 10 && inventory > 0">Almost Sold Out!</p> -->
         <!-- <p v-else>Out of Stock</p> -->
@@ -43,7 +41,7 @@
           :key="variant.variantId"
           class="color-box"
           :style="{ backgroundColor: variant.variantColor }"
-          v-on:mouseover="updateProduct(index)"
+          @mouseover="updateProduct(index)"
         >
         </div>
 

@@ -91,3 +91,7 @@ textarea {
 .outOfStock {
   text-decoration: line-through;
 }
+
+.noSale {
+  visibility: hidden;
+}
