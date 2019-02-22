@@ -1,3 +1,17 @@
+Vue.component('product-details', {
+  props: {
+    details: {
+      type: Array,
+      required: true,
+    },
+  },
+  template: `
+    <ul>
+      <li v-for="detail in details">{{ detail }}</li>
+    </ul>
+  `,
+})
+
 Vue.component('product', {
   props: {
     premium: {
@@ -28,9 +42,7 @@ Vue.component('product', {
 
         <p>Shipping: {{ shipping }}</p>
 
-        <ul>
-          <li v-for="detail in details">{{ detail }}</li>
-        </ul>
+        <product-details :details="details"></product-details>
 
         <div
           v-for="(variant, index) in variants"
@@ -56,9 +68,6 @@ Vue.component('product', {
         </button>
         <button v-on:click="removeFromCart">Remove from Cart</button>
 
-        <div class="cart">
-          <p>Cart: {{ cart }}</p>
-        </div>
       </div>
     </div>
   `,
@@ -87,12 +96,11 @@ Vue.component('product', {
         }
       ],
       sizes: ['XS', 'S', 'M', 'XM', 'L', 'XL', 'XXL', 'DAMN SON YOU BIG FOOT!!!'],
-      cart: 0,
     }
   },
   methods: {
     addToCart: function() {
-      this.cart += 1;
+      this.$emit('add-to-cart');
     },
     updateProduct: function(index) {
       this.selectedVariant = index;
@@ -137,5 +145,11 @@ const app = new Vue({
   el: '#app',
   data: {
     premium: true,
-  }
+    cart: 0,
+  },
+  methods: {
+    addToCart() {
+      this.cart += 1
+    },
+  },
 })
