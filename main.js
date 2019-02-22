@@ -2,8 +2,8 @@ Vue.component('product', {
   props: {
     premium: {
       type: Boolean,
-      required: true,
-    }
+      required: true
+    },
   },
   template: `
     <div class="product">
@@ -26,7 +26,7 @@ Vue.component('product', {
         <!-- <p v-else>Out of Stock</p> -->
         <a v-bind:href="link" >More Products Like This</a>
 
-        <p>User is premium: {{ premium }}</p>
+        <p>Shipping: {{ shipping }}</p>
 
         <ul>
           <li v-for="detail in details">{{ detail }}</li>
@@ -116,9 +116,6 @@ Vue.component('product', {
     inStock() {
       return this.variants[this.selectedVariant].variantQuantity;
     },
-    onSaleInfo() {
-      return this.brand + ' ' + this.product
-    },
     sale() {
       if (this.onSale && this.inStock) {
         return this.brand + ' ' + this.product + ' are on sale!'
@@ -126,13 +123,19 @@ Vue.component('product', {
         return this.brand + ' ' + this.product + ' are not on sale.'
       }
     },
+    shipping() {
+      if (this.premium) {
+        return "Free";
+      } else {
+        return "$2.99";
+      }
+    }
   }
 })
 
 const app = new Vue({
   el: '#app',
   data: {
-    premium: false,
+    premium: true,
   }
-
 })
