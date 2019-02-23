@@ -80,7 +80,7 @@ Vue.component('product', {
       // inventory: 0,
       // inStock: true,
       onSale: true,
-      details: ['80% cotton', '20% polyester', 'XL'],
+      details: ['80% cotton', '20% polyester'],
       variants: [
         {
           variantId: 2234,
@@ -100,19 +100,15 @@ Vue.component('product', {
   },
   methods: {
     addToCart: function() {
-      this.$emit('add-to-cart');
+      this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
     },
     updateProduct: function(index) {
       this.selectedVariant = index;
       console.log(index);
     },
     removeFromCart: function() {
-      if (this.cart === 0) {
-        return
-      } else {
-        this.cart -= 1;
-      }
-    }
+      this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId);
+    },
   },
   computed: {
     title() {
@@ -145,11 +141,21 @@ const app = new Vue({
   el: '#app',
   data: {
     premium: true,
-    cart: 0,
+    cart: [],
   },
   methods: {
-    addToCart() {
-      this.cart += 1
+    addToCart(id) {
+      this.cart.push(id);
     },
+    removeFromCart(id) {
+      if (this.cart.length === 0 || this.cart.indexOf(id) === -1) {
+        return
+      } else {
+        this.cart.splice(this.cart.indexOf(id), 1);
+        console.log(this.cart.indexOf(id));
+        console.log(this.cart.length);
+        console.log(this.cart);
+      }
+    }
   },
 })

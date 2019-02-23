@@ -14,12 +14,13 @@
     <div id="app">
 
       <div class="cart">
-        <p>Cart: {{ cart }}</p>
+        <p>Cart: {{ cart.length }}</p>
       </div>
 
       <product
         :premium="premium"
         @add-to-cart="addToCart"
+        @remove-from-cart="removeFromCart"
       >
       </product>
     </div>
