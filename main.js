@@ -210,14 +210,14 @@ Vue.component('product-review', {
       name: null,
       text: null,
       rating: null,
-      errors: [],
       recommendation: null,
+      errors: [],
     }
   },
   methods: {
     onSubmit() {
       this.errors = [];
-      if (this.name && this.text && this.rating) {
+      if (this.name && this.text && this.rating && this.recommendation) {
         let productReview = {
           name: this.name,
           text: this.text,
@@ -229,11 +229,11 @@ Vue.component('product-review', {
         this.text = null;
         this.rating = null;
         this.recommendation = null;
-      }
-      else {
+      } else {
         if(!this.name) this.errors.push("Your name is required.");
         if(!this.text) this.errors.push("What's the point of leaving a review champ?");
         if(!this.rating) this.errors.push("You're reviewing but not rating it? That's like saying you love Gnocchi but when I make them for you end up going to Maccas!");
+        if(!this.recommendation) this.errors.push("Think about it. Would you like it if your gandma wore these socks?");
       }
     }
   }
