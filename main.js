@@ -1,3 +1,5 @@
+const eventBus = new Vue()
+
 Vue.component('product-details', {
   props: {
     details: {
@@ -38,7 +40,7 @@ Vue.component('product', {
         <!-- <p v-if="inventory > 10">In Stock</p> -->
         <!-- <p v-else-if="inventory <= 10 && inventory > 0">Almost Sold Out!</p> -->
         <!-- <p v-else>Out of Stock</p> -->
-        <a v-bind:href="link" >More Products Like This</a>
+        <a v-bind:href= "link" >More Products Like This</a>
 
         <p>Shipping: {{ shipping }}</p>
 
@@ -70,20 +72,7 @@ Vue.component('product', {
 
       </div>
 
-      <div>
-        <h2>See Latest Reviews</h2>
-        <p v-if="!reviews.length">No Reviews Yet</p>
-        <ul>
-          <li v-for="review in reviews">
-            <p>{{ review.name }}</p>
-            <p>{{ review.rating }} out of 5</p>
-            <p>{{ review.text }}</p>
-            <p>Does {{ review.name }} recommend this product? {{ review.recommendation }}</p>
-          </li>
-        </ul>
-      </div>
-
-      <product-review @review-submitted="addReview" ></product-review>
+      <product-tabs :reviews="reviews"></product-tabs>
 
     </div>
   `,
@@ -126,9 +115,6 @@ Vue.component('product', {
     removeFromCart: function() {
       this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId);
     },
-    addReview(productReview) {
-      this.reviews.push(productReview);
-    }
   },
   computed: {
     title() {
@@ -224,7 +210,7 @@ Vue.component('product-review', {
           rating: this.rating,
           recommendation: this.recommendation,
         }
-        this.$emit('review-submitted', productReview)
+        eventBus.$emit('review-submitted', productReview)
         this.name = null;
         this.text = null;
         this.rating = null;
@@ -235,6 +221,56 @@ Vue.component('product-review', {
         if(!this.rating) this.errors.push("You're reviewing but not rating it? That's like saying you love Gnocchi but when I make them for you end up going to Maccas!");
         if(!this.recommendation) this.errors.push("Think about it. Would you like it if your gandma wore these socks?");
       }
+    }
+  }
+})
+
+Vue.component('product-tabs', {
+  props: {
+    reviews: {
+      type: Array,
+      required: true,
+    }
+  },
+
+  template: `
+    <div>
+
+      <div>
+        <span
+          class="tab"
+          :class="{ activeTab: selectedTab === tab}"
+          v-for="(tab, index) in tabs"
+          :key ="index"
+          @click="selectedTab = tab"
+        >
+          {{ tab }}
+        </span>
+      </div>
+
+      <div v-show="selectedTab === 'Reviews'">
+        <h2>See Latest Reviews</h2>
+        <p v-if="!reviews.length">No Reviews Yet</p>
+        <ul>
+          <li v-for="review in reviews">
+            <p>{{ review.name }}</p>
+            <p>{{ review.rating }} out of 5</p>
+            <p>{{ review.text }}</p>
+            <p>Does {{ review.name }} recommend this product? {{ review.recommendation }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <product-review
+        v-show="selectedTab === 'Make a Review'"
+      >
+      </product-review>
+    </div>
+  `,
+  data() {
+    return {
+      tabs: ['Reviews', 'Make a Review'],
+      selectedTab: 'Reviews',
     }
   }
 })
