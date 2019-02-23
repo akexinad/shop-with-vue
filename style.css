@@ -5,15 +5,20 @@ body {
   }
 
 .nav-bar {
-  background: linear-gradient(-90deg, #84CF6A, #16C0B0);
+  background: linear-gradient(-90deg, #cf6969, #c11616);
   height: 60px;
   margin-bottom: 15px;
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .product {
   display: flex;
   flex-flow: wrap;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 img {
@@ -94,4 +99,13 @@ textarea {
 
 .noSale {
   visibility: hidden;
+}
+
+.cart-buttons-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cart-buttons {
+  margin: 0 1em;
 }

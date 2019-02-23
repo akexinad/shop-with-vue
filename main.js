@@ -32,15 +32,12 @@ Vue.component('product', {
 
         <h1>{{ title }}</h1>
 
-        <!-- <h2 :class="{ noSale: !onSale }" >{{ onSaleInfo }} END OF YEAR SALE!!!</h2> -->
+        <h2>{{ productName }}</h2>
 
         <p v-if="inStock">In Stock</p>
         <p v-else >Out of Stock</p>
         <p>{{ sale }}</p>
-        <!-- <p v-if="inventory > 10">In Stock</p> -->
-        <!-- <p v-else-if="inventory <= 10 && inventory > 0">Almost Sold Out!</p> -->
-        <!-- <p v-else>Out of Stock</p> -->
-        <a v-bind:href= "link" >More Products Like This</a>
+        <a v-bind:href="link" >More Products Like This</a>
 
         <p>Shipping: {{ shipping }}</p>
 
@@ -58,17 +55,25 @@ Vue.component('product', {
         <h3>Sizes</h3>
         <ul>
           <li
-          v-for="size in sizes">{{ size }}</li>
+          v-for="detail in technicalInfo">{{ detail }}</li>
         </ul>
 
-        <button
-          v-on:click="addToCart"
-          :disabled="!inStock"
-          :class="{ disabledButton: !inStock }"
-        >
-        Add to Cart
-        </button>
-        <button v-on:click="removeFromCart">Remove from Cart</button>
+        <div class="cart-buttons-container">
+          <button
+            class="cart-buttons"
+            v-on:click="addToCart"
+            :disabled="!inStock"
+            :class="{ disabledButton: !inStock }"
+          >
+          Add to Cart
+          </button>
+          <button
+            class="cart-buttons"
+            v-on:click="removeFromCart"
+          >
+          Remove from Cart
+          </button>
+        </div>
 
       </div>
 
@@ -78,29 +83,31 @@ Vue.component('product', {
   `,
   data() {
     return {
-      brand: "THERE'S HOLES IN YOUR",
-      product: 'Socks',
+      brand: "SEIKO",
+      product: 'SKX Range',
       selectedVariant: 0,
       link: 'https://www.youtube.com/watch?v=bp_39m9k1AE',
       // inventory: 0,
       // inStock: true,
       onSale: true,
-      details: ['80% cotton', '20% polyester'],
+      details: ['200m Diver', 'Automatic Movement'],
       variants: [
         {
           variantId: 2234,
-          variantColor: 'green',
-          variantImage: './assets/socks-green.jpeg',
+          variantName: 'SKX007',
+          variantColor: 'black',
+          variantImage: './assets/skx007.jpg',
           variantQuantity: 10
         },
         {
           variantId: 2235,
-          variantColor: 'blue',
-          variantImage: './assets/socks-blue.jpeg',
+          variantName: 'SKX009',
+          variantColor: 'navy',
+          variantImage: './assets/skx009.jpg',
           variantQuantity: 0,
         }
       ],
-      sizes: ['XS', 'S', 'M', 'XM', 'L', 'XL', 'XXL', 'DAMN SON YOU BIG FOOT!!!'],
+      technicalInfo: ['316L Stainless Steel', '42mm wide', '46mm Lug to Lug', '22mm Lug Width', '7s26c Automatic Movement', '200m Water Resistance'],
       reviews: []
     }
   },
@@ -123,14 +130,17 @@ Vue.component('product', {
     image() {
       return this.variants[this.selectedVariant].variantImage;
     },
+    productName() {
+      return this.variants[this.selectedVariant].variantName;
+    },
     inStock() {
       return this.variants[this.selectedVariant].variantQuantity;
     },
     sale() {
       if (this.onSale && this.inStock) {
-        return this.brand + ' ' + this.product + ' are on sale!'
+        return this.brand + ' ' + this.product + ' is on sale!'
       } else {
-        return this.brand + ' ' + this.product + ' are not on sale.'
+        return this.brand + ' ' + this.product + ' is not on sale.'
       }
     },
     shipping() {
