@@ -140,6 +140,11 @@ Vue.component('product', {
         return "$2.99";
       }
     }
+  },
+  mounted() {
+    eventBus.$on('review-submitted', productReview => {
+      this.reviews.push(productReview);
+    })
   }
 })
 
