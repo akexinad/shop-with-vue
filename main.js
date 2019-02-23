@@ -69,6 +69,21 @@ Vue.component('product', {
         <button v-on:click="removeFromCart">Remove from Cart</button>
 
       </div>
+
+      <div>
+        <h2>See Latest Reviews</h2>
+        <p v-if="!reviews.length">No Reviews Yet</p>
+        <ul>
+          <li v-for="review in reviews">
+            <p>{{ review.name }}</p>
+            <p>{{ review.rating }} out of 5</p>
+            <p>{{ review.text }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <product-review @review-submitted="addReview" ></product-review>
+
     </div>
   `,
   data() {
@@ -96,6 +111,7 @@ Vue.component('product', {
         }
       ],
       sizes: ['XS', 'S', 'M', 'XM', 'L', 'XL', 'XXL', 'DAMN SON YOU BIG FOOT!!!'],
+      reviews: []
     }
   },
   methods: {
@@ -109,6 +125,9 @@ Vue.component('product', {
     removeFromCart: function() {
       this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId);
     },
+    addReview(productReview) {
+      this.reviews.push(productReview);
+    }
   },
   computed: {
     title() {
@@ -137,6 +156,75 @@ Vue.component('product', {
   }
 })
 
+Vue.component('product-review', {
+  template: `
+    <form class="review-form" @submit.prevent="onSubmit">
+
+      <p v-if="errors.length">
+        <b>Hang On!</b>
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+      </p>
+
+      <p>
+        <label for="name">Name:</label>
+        <input id="name" v-model="name" placeholder="name" >
+      </p>
+
+      <p>
+        <label for="text">Review:</label>
+        <textarea id="text" v-model="text" ></textarea>
+      </p>
+
+      <p>
+        <label for="rating">Rating:</label>
+        <select id="rating" v-model.number="rating" >
+          <option>5</option>
+          <option>4</option>
+          <option>3</option>
+          <option>2</option>
+          <option>1</option>
+        </select>
+      </p>
+
+      <p>
+        <input type="submit" value="Submit">
+      </p>
+
+    </form>
+  `,
+  data() {
+    return{
+      name: null,
+      text: null,
+      rating: null,
+      errors: [],
+    }
+  },
+  methods: {
+    onSubmit() {
+      this.errors = [];
+      if (this.name && this.text && this.rating) {
+        let productReview = {
+          name: this.name,
+          text: this.text,
+          rating: this.rating,
+        }
+        this.$emit('review-submitted', productReview)
+        this.name = null;
+        this.text = null;
+        this.rating = null;
+      }
+      else {
+        if(!this.name) this.errors.push("Your name is required.");
+        if(!this.text) this.errors.push("What's the point of leaving a review champ?");
+        if(!this.rating) this.errors.push("You're reviewing but not rating it? That's like saying you love Gnocchi but when I make them for you end up going to Maccas!");
+      }
+    }
+  }
+})
+
 const app = new Vue({
   el: '#app',
   data: {
@@ -152,9 +240,6 @@ const app = new Vue({
         return
       } else {
         this.cart.splice(this.cart.indexOf(id), 1);
-        console.log(this.cart.indexOf(id));
-        console.log(this.cart.length);
-        console.log(this.cart);
       }
     }
   },
